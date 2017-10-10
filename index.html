@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/solar/bootstrap.min.css" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <div class="bs-component">
+              <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <div class="navbar-brand" id="div-time">12:00</div>
+                  </div>
+
+                </div>
+              </nav>
+            </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+              
+              <h3>Minute</h3>
+              <div class="bs-component">
+                <div class="progress progress-striped active">
+                  <div id="progress-minute" class="progress-bar progress-bar-info" style="width: 45%"></div>
+                </div>
+              </div>
+
+              <h3>Hour</h3>
+              <div class="bs-component">
+                <div class="progress progress-striped active">
+                  <div id="progress-hour" class="progress-bar progress-bar-success" style="width: 45%"></div>
+                </div>
+              </div>
+
+              <h3>Day</h3>
+              <div class="bs-component">
+                <div class="progress progress-striped active">
+                  <div id="progress-day" class="progress-bar progress-bar-warning" style="width: 45%"></div>
+                </div>
+              </div>
+
+              <h3>Month</h3>
+              <div class="bs-component">
+                <div class="progress progress-striped active">
+                  <div id="progress-month" class="progress-bar progress-bar" style="width: 45%"></div>
+                </div>
+              </div>
+
+              <h3>Year</h3>
+              <div class="bs-component">
+                <div class="progress progress-striped active">
+                  <div id="progress-year" class="progress-bar progress-bar-danger" style="width: 45%"></div>
+                </div>
+              </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+      var lastTime = new Date();
+
+      function updateProgressBar( elementId, normalisedProgress ){
+        var bar = document.getElementById( elementId );
+        bar.style.width = (normalisedProgress * 100) + "%";
+      }
+
+      function padNumber( n ){
+        if( ("" + n).length < 2) return "0" + n;
+        return n;
+      }
+
+      function updateTime( now ){
+        var clock = document.getElementById( "div-time" );
+        var display =
+          padNumber(now.getHours()) + ":" +
+          padNumber( now.getMinutes()) + ":" +
+          padNumber(now.getSeconds());
+        clock.innerHTML = display;
+      }
+
+      function daysInCurrentMonth(){
+        // cribbed from https://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
+        var d = new Date();
+        d = new Date( d.getFullYear(), d.getMonth()+1, 0);
+        return d.getDate();
+      }
+
+      function updateClock(){
+        var now = new Date();
+
+        var minuteProgress = now.getSeconds() / 60.0;
+        var hourProgress = now.getMinutes() / 60.0;
+        var dayProgress = now.getHours() / 24.0;
+        var monthProgress = now.getDate() / daysInCurrentMonth();
+        var yearProgress = now.getMonth() / 12.0;
+
+        updateProgressBar( "progress-minute", minuteProgress );
+        updateProgressBar( "progress-hour", hourProgress );
+        updateProgressBar( "progress-day", dayProgress );
+        updateProgressBar( "progress-month", monthProgress );
+        updateProgressBar( "progress-year", yearProgress );
+
+        updateTime( now );
+
+        lastTime = now;
+      };
+
+      setInterval( updateClock, 1000.0 / 10.0 );
+      
+      console.log( padNumber("0") );
+
+    </script>
+  </body>
+</html>

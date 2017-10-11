@@ -7,7 +7,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/solar/bootstrap.min.css" crossorigin="anonymous">
-
   </head>
   <body>
     
@@ -77,8 +76,6 @@
 
     <script type="text/javascript">
 
-      var lastTime = new Date();
-
       function updateProgressBar( elementId, normalisedProgress ){
         var bar = document.getElementById( elementId );
         bar.style.width = (normalisedProgress * 100) + "%";
@@ -98,36 +95,57 @@
         clock.innerHTML = display;
       }
 
-      function daysInCurrentMonth(){
+      function getDaysInCurrentMonth(){
         // cribbed from https://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
         var d = new Date();
         d = new Date( d.getFullYear(), d.getMonth()+1, 0);
         return d.getDate();
       }
 
+      var MS_IN_AN_HOUR = (1000*60*60);
+      var MS_IN_A_DAY = MS_IN_AN_HOUR * 24;
+      
+      function updateMinute( now ){
+          var minuteProgress = now.getSeconds() / 60.0;
+          updateProgressBar( "progress-minute", minuteProgress );
+          return minuteProgress;
+      }
+
+      function updateHour( now, dtDayStart ){
+        // use ms in an hour to calculate percentage through current hour
+        var tsHourStart = dtDayStart.getTime() + (now.getHours() * MS_IN_AN_HOUR);
+        var hourProgress = (now.getTime() - tsHourStart) / MS_IN_AN_HOUR;
+        updateProgressBar( "progress-hour", hourProgress );
+        return hourProgress;
+      }
+
+      function updateDay( now, dtDayStart ){
+        // use ms in an day to calculate percentage through current day
+        var dayProgress = (now.getTime() - dtDayStart.getTime()) / MS_IN_A_DAY;
+        updateProgressBar( "progress-day", dayProgress );
+        return dayProgress;
+      }
+
       function updateClock(){
         var now = new Date();
+        var dtDayStart = new Date( now.getFullYear(), now.getMonth(), now.getDate() );
+        var daysInCurrentMonth = getDaysInCurrentMonth();
+        var msThisMonth = daysInCurrentMonth * MS_IN_A_DAY;
 
-        var minuteProgress = now.getSeconds() / 60.0;
-        var hourProgress = now.getMinutes() / 60.0;
-        var dayProgress = now.getHours() / 24.0;
-        var monthProgress = now.getDate() / daysInCurrentMonth();
+        var minuteProgress = updateMinute( now );
+        var hourProgress = updateHour( now, dtDayStart );
+        var dayProgress = updateDay( now, dtDayStart );
+        var monthProgress = now.getDate() / daysInCurrentMonth;
         var yearProgress = now.getMonth() / 12.0;
-
-        updateProgressBar( "progress-minute", minuteProgress );
-        updateProgressBar( "progress-hour", hourProgress );
-        updateProgressBar( "progress-day", dayProgress );
+        
         updateProgressBar( "progress-month", monthProgress );
         updateProgressBar( "progress-year", yearProgress );
 
         updateTime( now );
 
-        lastTime = now;
-      };
+    };
 
       setInterval( updateClock, 1000.0 / 10.0 );
-      
-      console.log( padNumber("0") );
 
     </script>
   </body>

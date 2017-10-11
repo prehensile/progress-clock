@@ -1,0 +1,25 @@
+{
+  "short_name": "Progress Clock",
+  "name": "Progress Clock",
+  "icons": [{
+      "src": "icons/icon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }, {
+      "src": "icons/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "152x152"
+    }, {
+      "src": "icons/ms-touch-icon-144x144-precomposed.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }, {
+      "src": "icons/chrome-touch-icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }],
+  "background_color": "#113844",
+  "theme_color": "#0b2b36",
+  "display": "standalone",
+  "start_url": "/"
+}
